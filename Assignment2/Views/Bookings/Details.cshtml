@@ -1,0 +1,66 @@
+﻿@using Assignment2.Core
+@using Assignment2.Models.ViewDataModels
+@using Microsoft.AspNetCore.Identity
+@using Assignment2.Areas.Identity.Data
+
+@model Assignment2.Models.Booking
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ApplicationUser? account = ViewData["Account"] as ApplicationUser;
+    RoomDetails? roomDetails = ViewData["RoomDetails"] as RoomDetails;
+}
+
+<h2 class="mb-5 text-light">Booking Details</h2>
+
+<div class="mb-5">
+    <dl style="font-size: 18px" class="text-light row">
+        <dt class = "col-sm-2">Customer</dt>
+        <dd class = "col-sm-10">@account.Firstname @account.Lastname</dd>
+
+        <dt class = "col-sm-2">Check In Date</dt>
+        <dd class = "col-sm-10">@Model.BookingStartDate</dd>
+
+        <dt class = "col-sm-2">Check Out Date</dt>
+        <dd class = "col-sm-10">@Model.BookingEndDate</dd>
+
+        <dt class = "col-sm-2">Booking Paid</dt>
+        @if (Model.BookingIsPaid)
+        {
+             <dd class = "col-sm-10">Paid Online</dd>
+        }
+        else
+        {
+            <dd class = "col-sm-10">Unpaid</dd>
+        }
+
+        <dt class = "col-sm-2">Hotel</dt>
+        <dd class = "col-sm-10">@roomDetails.HotelName</dd>
+
+        <dt class = "col-sm-2">Room</dt>
+        <dd class = "col-sm-10">@roomDetails.RoomID</dd>
+
+        <dt class = "col-sm-2">Room Type</dt>
+        <dd class = "col-sm-10">@roomDetails.RoomType</dd>
+
+        <dt class = "col-sm-2">Daily Cost</dt>
+        <dd class = "col-sm-10">@roomDetails.RoomDailyCost</dd>
+
+        <dt class = "col-sm-2">Has Car Park</dt>
+        @if (Model.HasCarPark)
+        {
+             <dd class = "col-sm-10">Reserved</dd>
+        }
+        else
+        {
+            <dd class = "col-sm-10">No</dd>
+        }
+
+    </dl>
+
+</div>
+<a class="w-100 button-site" style="text-decoration: none; color: white" asp-action="Index">Back</a>

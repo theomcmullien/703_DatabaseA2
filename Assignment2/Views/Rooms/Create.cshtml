@@ -1,0 +1,65 @@
+﻿@model Assignment2.Models.Room
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<Hotel>? hotels = ViewData["Hotels"] as List<Hotel>;
+}
+
+<h4 class="mb-4 text-light">Add Room</h4>
+<div class="row">
+    <div class="col-md-4 text-light">
+        <form asp-action="Create" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3 form-group">
+                <label class="mb-3" asp-for="RoomDailyCost" class="control-label text-light">Daily Cost</label>
+                <input asp-for="RoomDailyCost" class="form-control" />
+                <span asp-validation-for="RoomDailyCost" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-floating">
+                <p class="text-light">Room Type</p>
+                <select style="width: 100%; padding: 16px 16px; font-size: 16px; outline: none; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;" asp-for="RoomType" required>
+                    <option required value="Single">Single</option>
+                    <option required value="Two Bedroom">Two Bedroom</option>
+                    <option required value="Superior">Superior</option>
+                </select>
+                <span asp-validation-for="RoomType" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-floating">
+                <p>Room Status</p>
+                <select style="width: 100%; padding: 16px 16px; font-size: 16px; outline: none; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;" asp-for="RoomStatus" required>
+                    <option required value="Vacant Clean">Vacant Clean</option>
+                    <option required value="Vacant Dirty">Vacant Dirty</option>
+                    <option required value="Occupied Clean">Occupied Clean</option>
+                    <option required value="Occupied Service">Occupied Service</option>
+                    <option required value="Maintenance">Maintenance</option>
+                </select>
+                <span asp-validation-for="RoomStatus" class="text-danger"></span>
+            </div>
+            <div class="mb-4 form-floating">
+                <p class="text-light">Hotel</p>
+                <select style="width: 100%; padding: 16px 16px; font-size: 16px; outline: none; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;" asp-for="HotelID" required>
+                    @if (hotels != null)
+                    {
+                        foreach (var h in hotels)
+                        {
+                            <option required value="@h.HotelID">@h.HotelName</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="HotelID" class="text-danger"></span>
+            </div>
+            <div class="mb-5 form-group">
+                <input type="submit" value="Create" class="w-100 button-site" />
+            </div>
+            <button class="button-site">
+                <a style="text-decoration: none; color: white" asp-action="Index">Back</a>
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

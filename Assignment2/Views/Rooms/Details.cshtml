@@ -1,0 +1,30 @@
+﻿@model Assignment2.Models.Room
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Hotel? hotel = ViewData["Hotel"] as Hotel;
+}
+
+<h1 class="mb-5 text-light">Room Details</h1>
+
+<div class="mb-5 text-light">
+    <dl style="font-size: 18px" class="row">
+        <dt class = "col-sm-2">Daily Cost</dt>
+        <dd class = "col-sm-10">@string.Format("${0:0.00}", Model.RoomDailyCost)</dd>
+
+        <dt class = "col-sm-2">Room Type</dt>
+        <dd class = "col-sm-10">@Model.RoomType</dd>
+
+        <dt class = "col-sm-2">Room Status</dt>
+        <dd class = "col-sm-10">@Model.RoomStatus</dd>
+
+        <dt class = "col-sm-2">Hotel</dt>
+        @if (hotel != null)
+        {
+            <dd class = "col-sm-10">@hotel.HotelName</dd>
+        }
+    </dl>
+</div>
+<a class="w-100 button-site" style="text-decoration: none; color: white" asp-action="Index">Back</a>

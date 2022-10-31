@@ -1,0 +1,97 @@
+﻿@using Assignment2.Core
+@using Microsoft.AspNetCore.Identity
+@using Assignment2.Areas.Identity.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Tomive</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Assignment2.styles.css" asp-append-version="true" />
+    <link href="~/lib/jquery-ui-1.13.2.custom/jquery-ui.min.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark nav-bg border-b box-shadow mb-3 pt-4 pb-4">
+            <div class="container-fluid nav-container">
+                <a style="font-size: 32px; font-weight: bold" class="navbar-brand ms-5" asp-area="" asp-controller="Home" asp-action="Index">Tomive</a>
+                
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item ms-5 me-3">
+                            <a style="font-size: 20px" class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (User.IsInRole(Constants.Roles.Customer) || User.IsInRole(Constants.Roles.Manager) || User.IsInRole(Constants.Roles.Reception))
+                            {
+                                <li class="nav-item ms-3 me-3">
+                                    <a style="font-size: 20px" class="nav-link text-light" asp-area="" asp-controller="Bookings" asp-action="Index">Bookings</a>
+                                </li>
+                            }
+                            @if (User.IsInRole(Constants.Roles.Housekeeper) || User.IsInRole(Constants.Roles.Reception) || User.IsInRole(Constants.Roles.Manager))
+                            {
+                                <li class="nav-item ms-3 me-3">
+                                    <a style="font-size: 20px" class="nav-link text-light" asp-area="" asp-controller="Rooms" asp-action="Index">Rooms</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <ul class="navbar-nav">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item me-5">
+                            <p style="font-size: 18px" class="nav-link text-light">@UserManager.GetUserName(User)</p>
+                        </li>
+                        @if (User.IsInRole(Constants.Roles.Manager))
+                        {
+                            <li class="nav-item ms-5 me-3">
+                                <a style="font-size: 20px" class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Create Staff Account</a>
+                            </li>
+                        }
+                        <li class="nav-item ms-3 me-3">
+                            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button style="font-size: 20px" id="logout" type="submit" class="nav-link btn btn-link text-light">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item ms-3 me-3">
+                            <a style="font-size: 20px" class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                        </li>
+                        <li class="nav-item ms-3 me-3">
+                            <a style="font-size: 20px" class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="bg">
+        <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    </div>
+    
+    @*<footer class="border-top footer text-muted">
+        <div class="container">
+            2022 - Contact tomive@gmail.com
+        </div>
+    </footer>*@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-ui-1.13.2.custom/jquery-ui.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

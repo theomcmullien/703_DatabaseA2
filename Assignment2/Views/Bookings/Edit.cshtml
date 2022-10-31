@@ -1,0 +1,77 @@
+﻿@using Assignment2.Models.ViewDataModels
+@model Assignment2.Models.Booking
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<RoomDescription>? rooms = ViewData["RoomDescriptions"] as List<RoomDescription>;
+
+}
+
+<h1 class="text-light">Alter Booking</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="BookingID" />
+            <div class="mb-3 form-group">
+                <p class="text-light mb-1 mt-2">Select Room</p>
+                <select style="width: 100%; padding: 16px 16px; font-size: 16px; outline: none; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;" asp-for="RoomID" required>
+                    @if (rooms != null)
+                    {
+                        @foreach (var r in rooms)
+                        {
+                            <option required value="@r.Room.RoomID">@r.Description</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="RoomID" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="HasCarPark" />
+                    <p style="display: inline" class="text-light ms-2">Reserve Car Park</p>
+                </label>
+            </div>
+            <div class="mb-3 form-group">
+                <label asp-for="BookingStartDate" class="control-label text-light">Check In Date</label>
+                <input asp-for="BookingStartDate" class="datepicker form-control" />
+                <span asp-validation-for="BookingStartDate" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-group">
+                <label asp-for="BookingStartDate" class="control-label text-light">Check Out Date</label>
+                <input asp-for="BookingEndDate" class="datepicker form-control" />
+                <span asp-validation-for="BookingEndDate" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="BookingCardNumber"/>
+            <input type="hidden" asp-for="BookingCardExiryDate"/>
+            <input type="hidden" asp-for="BookingCardCCV"/>
+            <div class="mb-4 form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="BookingIsPaid" />
+                    <p style="display: inline" class="text-light ms-2">Paid</p>
+                </label>
+            </div>
+            <input type="hidden" asp-for="CustomerID"/>
+            <div class="mb-5 form-group">
+                <input type="submit" value="Save" class="w-100 button-site" />
+            </div>
+            <button class="button-site">
+                <a style="text-decoration: none; color: white" asp-action="Index">Back</a>
+            </button>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('.datepicker').datepicker();
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,118 @@
+﻿@using Assignment2.Core
+@using Microsoft.AspNetCore.Identity
+@using Assignment2.Areas.Identity.Data
+@model IEnumerable<Assignment2.Models.Booking>
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<ApplicationUser>? accounts = ViewData["Accounts"] as List<ApplicationUser>;
+    ApplicationUser? account = null;
+
+    List<Room>? rooms = ViewData["Rooms"] as List<Room>;
+    Room? room = null;
+
+    decimal moneyIn = 0;
+    bool isAuthorized = User.IsInRole(Constants.Roles.Manager) || User.IsInRole(Constants.Roles.Reception);
+}
+
+<div class="text-white items content">
+    <div class="all-items">
+        <div class="title">
+            <h2>Bookings</h2>
+            @if (User.IsInRole(Constants.Roles.Customer))
+            {
+                <a class="button-site" asp-action="Create">Make Booking</a>
+            }
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    @if (isAuthorized)
+                    {
+                        <th>Customer</th>
+                    }
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    @if (User.IsInRole(Constants.Roles.Customer))
+                    {
+                        <th>Status</th>
+                        <th>Car Park</th>
+                    }
+                    @if (isAuthorized)
+                    {
+                        <th>Money In</th>
+                        <th>Money Out</th>
+                    }
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model) {
+                @if (User.IsInRole(Constants.Roles.Customer) && item.CustomerID == UserManager.GetUserId(User))
+                {
+                    <tr>
+                        <td>@item.BookingStartDate</td>
+                        <td>@item.BookingEndDate</td>
+                        @if (item.BookingIsPaid)
+                        {
+                            <td>Paid Online</td>
+                        }
+                        else
+                        {
+                            <td>Unpaid</td>
+                        }
+                        @if (item.HasCarPark)
+                        {
+                            <td>Reserved</td>
+                        }
+                        else
+                        {
+                            <td>No</td>
+                        }
+                        <td>
+                            <button class="me-1">
+                                <a style="text-decoration: none; color: white" asp-action="Details" asp-route-id="@item.BookingID">Details</a>
+                            </button>
+                            <button style="background-color: #EA4C46;" class="me-1">
+                                <a style="text-decoration: none; color: white" asp-action="Delete" asp-route-id="@item.BookingID">Cancel Booking</a>
+                            </button>
+                        </td>
+                    </tr>
+                }
+                else if (isAuthorized)
+                {
+                    account = accounts.Where(a => a.Id == item.CustomerID).First();
+                    room = rooms.Where(r => r.RoomID == item.RoomID).First();
+                    moneyIn = (DateTime.ParseExact(item.BookingEndDate, "MM/dd/yyyy", null) - DateTime.ParseExact(item.BookingStartDate, "MM/dd/yyyy", null)).Days * room.RoomDailyCost;
+                    <tr>
+                        <td>@account.Firstname @account.Lastname</td>
+                        <td>@item.BookingStartDate</td>
+                        <td>@item.BookingEndDate</td>
+                        <td>@string.Format("${0:0.00}", moneyIn)</td>
+                        <td>$0.00</td>
+                        <td>
+                            @if (isAuthorized)
+                            {
+                                <button class="me-1">
+                                    <a style="text-decoration: none; color: white" asp-action="Edit" asp-route-id="@item.BookingID">Edit</a>
+                                </button>
+                            }
+                            <button class="me-1">
+                                <a style="text-decoration: none; color: white" asp-action="Details" asp-route-id="@item.BookingID">Details</a>
+                            </button>
+                            <button class="me-1">
+                                <a style="text-decoration: none; color: white" asp-action="Delete" asp-route-id="@item.BookingID">Cancel Booking</a>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+

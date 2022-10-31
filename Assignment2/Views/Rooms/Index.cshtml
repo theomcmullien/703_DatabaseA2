@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Assignment2.Models.Room>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<Hotel>? hotels = ViewData["Hotels"] as List<Hotel>;
+}
+
+<div class="text-white items content">
+    <div class="all-items">
+        <div class="title">
+            <h2>Rooms</h2>
+            <a class="button-site" asp-action="Create">Add Room</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Daily Cost</th>
+                    <th>Room Type</th>
+                    <th>Room Status</th>
+                    <th>Hotel</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @string.Format("${0:0.00}", item.RoomDailyCost)
+                    </td>
+                    <td>
+                        @item.RoomType
+                    </td>
+                    <td>
+                        @item.RoomStatus
+                    </td>
+                    <td>
+                        @hotels.Where(h => h.HotelID == item.HotelID).Select(h => h.HotelName).First()
+                    </td>
+                    <td>
+                        <button class="me-1">
+                            <a style="text-decoration: none; color: white" asp-action="Edit" asp-route-id="@item.RoomID">Edit</a>
+                        </button>
+                        <button class="me-1">
+                            <a style="text-decoration: none; color: white" asp-action="Details" asp-route-id="@item.RoomID">Details</a>
+                        </button>
+                        <button class="me-1">
+                            <a style="text-decoration: none; color: white" asp-action="Delete" asp-route-id="@item.RoomID">Remove</a>
+                        </button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
